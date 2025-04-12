@@ -71,6 +71,7 @@ export default async function fetchingData() {
     stocks.map((s) => 
       Promise.all(
         accounts.map(async (a) => {
+          
           try {
             const convertionTrans = await fetchDatas(
               `transactions/${a.user_id}/${s.stock_id}/convertions`
@@ -80,6 +81,11 @@ export default async function fetchingData() {
               convertionMal[a.user_id] = {};
             }
             convertionMal[a.user_id][s.stock_id] = convertionTrans;
+            if(convertionTrans)
+            {
+              console.log("working convertionTrans", convertionTrans)
+            }
+           
           } catch (e) {
             console.warn(e.info);
           }

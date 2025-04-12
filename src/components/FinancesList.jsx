@@ -21,7 +21,7 @@ export default function FinancesList() {
         accounts,
         stocks,
         stock_id: Object.keys(priceMal),
-        stockPrice: priceMal,
+        stockPrice: stocks.stock_price,
         transactions: transactionMal,
         convertion: convertionMal,
       };
@@ -79,6 +79,7 @@ export default function FinancesList() {
         const mainStock = values.stocks.find((s) =>
           values.transactions?.[a.user_id]?.some((t) => String(t.stock_id) === String(s.stock_id))
         );
+        console.log("main stock,", mainStock)
     
         const transaction = mainStock
           ? values.transactions?.[a.user_id]?.find((t) => String(t.stock_id) === String(mainStock.stock_id))
@@ -92,12 +93,14 @@ export default function FinancesList() {
         return (
           <div key={a.user_id} className="flex flex-col rounded-sm p-6 bg-indigo-100 border-indigo-200 shadow-sm border-2 text-indigo-700  justify-start gap-4">
             <span className="font-bold"><span className="text-sm italic text-zinc-500 font-light">account name</span> {a.user_full_name}</span>
-            <span className="font-bold"><span className="text-sm italic text-zinc-500 font-light">type of accoint</span> {a.type_of_account}</span> 
+            <span className="font-bold"><span className="text-sm italic text-zinc-500 font-light">type of account</span> {a.type_of_account}</span> 
+            <span className={`font-bold text-2xl text-left ${transaction.type_of_transaction === "BUY" ? "text-red-700" : "text-emerald-700"}`}>{transaction.type_of_transaction === "BUY" ? "-" : "+"} {transaction.type_of_transaction === "BUY" ? a.amount - transaction.price_transacion :  a.amount + transaction.price_transacion}  <span className="text-sm italic text-zinc-500 font-light">initial amount {a.amount}</span> </span> 
             <div className="bg-indigo-700 p-6 rounded-md text-indigo-100 flex-col flex">
-            <span className="font-bold"><span className="text-sm font-light">symbol </span>{mainStock ? `${mainStock.stock_symbol}:${transaction?.price_transacion ?? "-"}` : "-"}</span>
-            <span  className="font-bold"><span className="text-sm font-light">stock price </span>{mainStock && transaction ? `${transaction.price_transacion} USD` : "-"}</span>
+            <span className="font-bold"><span className="text-sm font-light">symbol </span>{mainStock ? `${mainStock.stock_symbol}` : "-"}</span>
+            <span className="font-bold"><span className="text-sm font-light">stock price </span>{convertion ? `${convertion.stock_price}` : "-"}</span>
+            <span  className="font-bold"><span className="text-sm font-light">investment price </span>{mainStock && transaction ? `${transaction.price_transacion} REAL` : "-"}</span>
             <span className="font-bold"><span className="text-sm font-light" >transaction </span>{transaction ? transaction.type_of_transaction : "-"}</span>
-            <span className="font-bold "><span className="text-sm font-light" >convertion </span>{convertion ? `${convertion.converted_value?.toFixed(2)} USD` : "-"}</span>
+            <span className="font-bold "><span className="text-sm font-light" >convertion </span>{convertion ? `${convertion.converted_value?.toFixed(2)} REAL` : "-"}</span>
          
               </div>           
              </div>

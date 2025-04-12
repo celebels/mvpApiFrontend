@@ -39,6 +39,7 @@ export default function FormInput() {
         headers: { "Content-Type": "application/json" },
       });
       if (!res.ok) throw new Error("Account creation failed");
+      
       return res.json();
     }
   });
@@ -55,6 +56,7 @@ export default function FormInput() {
         console.error(" STOCK error response:", errorText);
         throw new Error("Stock creation failed");
       }
+      console.log(" stock data, ",data)
       return res.json();
     }
   });
@@ -67,6 +69,7 @@ export default function FormInput() {
         headers: { "Content-Type": "application/json" },
       });
       if (!res.ok) throw new Error("Transaction creation failed");
+      console.log(" transition data, ",data)
       return res.json();
     }
   });
@@ -222,6 +225,7 @@ export default function FormInput() {
 try{
   const accRes = await accountMutation.mutateAsync(accountData);
   if(!accRes?.user_id) throw new Error("account response missing user id")
+   console.log(stockData)
   const stockRes = await stockMutation.mutateAsync(stockData);
   if(!stockRes?.stock_id) throw new Error("account response missing user id")
 
@@ -236,33 +240,7 @@ catch(e)
 {
   console.error("mutation failed   ", e.message)
 }
-   
-//mutation
-/*
-accountMutation.mutateAsync(accountData)
-
-    accountMutation.mutate(accountData, {
-      onSuccess: (res) => {
-        const user_id = res.user_id;
-        setValues((prev) => ({ ...prev, accountId: user_id }));
-       
-
-        stockMutation.mutate(stockData, {
-          onError:(e)=> {console.log("stock mutation fail",e.message)},
-          onSuccess: (res) => {
-            const stock_id = res.stock_id;
-            setValues((prev) => ({ ...prev, stockId: stock_id }));
-
-            transactionMutation.mutate({
-              ...transData,
-              user_id,
-              stock_id,
-            });
-          },
-        });
-      },
-    });
-*/
+  
 
     if (errors.length > 0) {
       return { errors };
@@ -284,17 +262,20 @@ accountMutation.mutateAsync(accountData)
         <div id="account" className="account flex flex-col gap-4">
           <input
             className="border-2 border-white rounded-md"
+            autoComplete="off"
             placeholder="account name"
             name="user_full_name"
           />
           <div className="flex flex-row gap-4">
             <input
               className="border-2 border-white rounded-md"
+              autoComplete="off"
               name="type_of_account"
               placeholder="account type"
             />
             <input
               className="border-2 border-white rounded-md"
+              autoComplete="off"
               name="amount"
               placeholder="amount"
             />
@@ -306,8 +287,9 @@ accountMutation.mutateAsync(accountData)
         }
 
         <>
-          <input placeholder="type of transaction" name="type_of_transaction" />
-          <input placeholder="how much" name="price_transacion" />
+          <input placeholder="type of transaction" autoComplete="off" name="type_of_transaction" />
+
+          <input placeholder="how much" autoComplete="off" name="price_transacion" />
         </>
 
         {
@@ -316,11 +298,13 @@ accountMutation.mutateAsync(accountData)
 
         <div className="stock-info flex flex-row">
           <input
+          autoComplete="off"
             className="border-2 border-white rounded-md"
             name="stock_symbol"
             placeholder="stock symbol"
           />
           <input
+          autoComplete="off"
             className="border-2 border-white rounded-md"
             name="sector"
             placeholder="sector"
